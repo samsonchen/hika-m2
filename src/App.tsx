@@ -63,28 +63,27 @@ export default function App() {
   const [activeCat, setActiveCat] = useState(CATEGORIES[0].id)
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const scrollerRef = useRef<HTMLDivElement>(null)
 
   const handleSetCat = (id: string) => {
     setActiveCat(id)
     const el = sectionRefs.current[id]
-    if (el && scrollerRef.current) {
-      const top = el.offsetTop - 56
-      scrollerRef.current.scrollTo({ top, behavior: 'smooth' })
+    if (el) {
+      // 取得 sticky tab bar 高度（約 49px）再加一點緩衝
+      const TAB_HEIGHT = 50
+      const rect = el.getBoundingClientRect()
+      const scrollTop = window.scrollY + rect.top - TAB_HEIGHT
+      window.scrollTo({ top: scrollTop, behavior: 'smooth' })
     }
   }
 
   return (
     <div
-      ref={scrollerRef}
-      data-scroller
       style={{
         maxWidth: 480,
         margin: '0 auto',
         minHeight: '100dvh',
         background: '#ffffff',
         position: 'relative',
-        overflowY: 'auto',
       }}
     >
       <Header lang={lang} />
